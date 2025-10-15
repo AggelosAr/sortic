@@ -120,9 +120,13 @@ class Imports:
     def sortss(self, dd: ModuleToF):
         sorted_items = sorted(dd.items(), key=lambda item: (not bool(item[1]), len(item[0]), item[0].lower()))
         return {
-            module: sorted(items, key=lambda x: (len(x[0] or module), (x[0] or module).lower()))
+            module: sorted(
+                list({(name, alias) for name, alias in items}),  # deduplicate here
+                key=lambda x: (len(x[0] or module), (x[0] or module).lower())
+            )
             for module, items in sorted_items
         }
+
 
 # --- RUN ---
 import_solver = Imports()
